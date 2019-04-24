@@ -1,0 +1,12 @@
+说明：
+	build_app.sh用于编译调试开发版本固件，会通过串口打印调试信息，默认从io2输出日志方便查找问题。
+	build_app_release.sh用于编译正式版本固件,除系统sdk打印和异常错误打印之外，不打印任何信息。
+	
+备注：
+    固件需要通过授权工具，写入授权秘钥后方可使用，否则设备不能激活。
+	
+一、调试开发编译(使用build_app.sh)
+sh build_app.sh esp_12F_plug_mini 1.0.0
+	
+二、正式发版编译(build_app_release.sh)
+sh build_app_release.sh esp_12F_plug_mini 1.0.0

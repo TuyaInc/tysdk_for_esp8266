@@ -1,0 +1,105 @@
+#############################################################
+# Required variables for each makefile
+# Discard this section from all parent makefiles
+# Expected variables (with automatic defaults):
+#   CSRCS (all "C" files in the dir)
+#   SUBDIRS (all subdirs with a Makefile)
+#   GEN_LIBS - list of libs to be generated ()
+#   GEN_IMAGES - list of object file images to be generated ()
+#   GEN_BINS - list of binaries to be generated ()
+#   COMPONENTS_xxx - a list of libs/objs in the form
+#     subdir/lib to be extracted and rolled up into
+#     a generated lib/image xxx.a ()
+#
+TARGET = eagle
+#FLAVOR = release
+FLAVOR ?= debug
+
+#EXTRA_CCFLAGS += -u
+
+APPDIR = .
+LDDIR = ../ld
+
+CCFLAGS += -Os
+CCFLAGS += -fno-aggressive-loop-optimizations
+
+TARGET_LDFLAGS =		\
+	-nostdlib		\
+	-Wl,-EL \
+	--longcalls \
+	--text-section-literals
+
+ifeq ($(FLAVOR),debug)
+    TARGET_LDFLAGS += -g -O2
+    DEBUG = 1
+endif
+
+ifeq ($(FLAVOR),release)
+    TARGET_LDFLAGS += -g -O0
+    DEBUG = 0
+endif
+
+LINKFLAGS_eagle.app.v6 = \
+	-L../lib        \
+	-Wl,--gc-sections   \
+	-nostdlib	\
+    -T$(LD_FILE)   \
+	-Wl,--no-check-sections	\
+    -u call_user_start	\
+	-Wl,-static						\
+	-Wl,--start-group					\
+	-lminic \
+	-lgcc					\
+	-lhal					\
+	-lphy	\
+	-lpp	\
+	-lnet80211	\
+	-lwpa	\
+	-lmain	\
+	-lfreertos	\
+	-llwip	\
+	-lsmartconfig  \
+	-lcrypto \
+	-lacalg \
+	-laipwm \
+	-lpwm \
+	-lcal \
+	-lespconn \
+	-ldriver \
+	-lbase \
+	-lsystem \
+	-lpsm \
+	-ltime \
+	-lhttpc \
+	-ltuya_sdk \
+	-ltls \
+	$(DEP_LIBS_eagle.app.v6)					\
+	-Wl,--end-group
+
+DEPENDS_eagle.app.v6 = \
+                $(LD_FILE) \
+                $(LDDIR)/eagle.rom.addr.v6.ld
+
+#############################################################
+# Configuration i.e. compile options etc.
+# Target specific stuff (defines etc.) goes in here!
+# Generally values applying to a tree are captured in the
+#   makefile at its root level - these are then overridden
+#   for a subtree within the makefile rooted therein
+#
+
+UNIVERSAL_TARGET_DEFINES = -DDEBUG=$(DEBUG) -DUSER_SW_VER=\"$(USER_SW_VER)\" -DAPP_BIN_NAME=\"$(APP_BIN_NAME)\" -DENABLE_8266TLS=$(ENABLE_8266TLS)
+
+# Other potential configuration flags include:
+#	-DTXRX_TXBUF_DEBUG
+#	-DTXRX_RXBUF_DEBUG
+#	-DWLAN_CONFIG_CCX
+CONFIGURATION_DEFINES =	-DICACHE_FLASH
+
+DEFINES +=				\
+	$(UNIVERSAL_TARGET_DEFINES)	\
+	$(CONFIGURATION_DEFINES)
+
+DDEFINES +=				\
+	$(UNIVERSAL_TARGET_DEFINES)	\
+	$(CONFIGURATION_DEFINES)

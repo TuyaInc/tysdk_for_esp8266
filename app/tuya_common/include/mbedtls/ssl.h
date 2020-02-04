@@ -357,7 +357,7 @@
  * Size defines
  */
 #if !defined(MBEDTLS_PSK_MAX_LEN)
-#define MBEDTLS_PSK_MAX_LEN            32 /* 256 bits */
+#define MBEDTLS_PSK_MAX_LEN            40 /* 256 bits */
 #endif
 
 /* Dummy type used only for its size */

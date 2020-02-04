@@ -69,7 +69,7 @@ VOID set_led_light_type(IN CONST LED_HANDLE handle,IN CONST LED_LT_E type,IN CON
 ***********************************************************/
 __LED_INDICATOR_EXT \
 VOID set_led_light_type_new(IN CONST LED_HANDLE handle,IN CONST LED_LT_E type,\
-                            IN CONST USHORT flh_mstime,IN CONST flh_ms_sumtime);
+                            IN CONST USHORT flh_mstime,IN CONST USHORT flh_ms_sumtime);
 
 #ifdef __cplusplus
 }

@@ -23,6 +23,12 @@ extern "C" {
 ***********************************************************/
 #define STRCASE_CMP
 
+struct ArrPosition
+{
+    unsigned short pStart;
+    unsigned short pEnd;
+};
+
 /***********************************************************
 *************************variable define********************
 ***********************************************************/
@@ -60,6 +66,13 @@ unsigned char asc2hex(char asccode);
 _UNI_SYSTEM_EXT \
 void ascs2hex(unsigned char *hex,unsigned char *ascs,int srclen);
 
+_UNI_SYSTEM_EXT \
+void HexToStr(BYTE *pbDest, BYTE *pbSrc, int nLen);
+
+_UNI_SYSTEM_EXT \
+VOID Int2HexStr(UINT val, CHAR *hexstr);
+
+
 /***********************************************************
 *  Function: GetSystemTime 获取系统时间
 *  Input: none
@@ -80,8 +93,23 @@ VOID GetSystemTime(OUT TIME_S *pSecTime,OUT TIME_MS *pMsTime);
 _UNI_SYSTEM_EXT \
 BOOL SystemIsrStatus(VOID);
 
+/***********************************************************
+*  Function: tuya_get_random_data
+*  Input: dst size
+*  Output: none
+*  Return: VOID
+***********************************************************/
+_UNI_SYSTEM_EXT \
+OPERATE_RET tuya_get_random_data(UCHAR_T* dst, INT_T size, INT_T range);
+
 _UNI_SYSTEM_EXT \
 OPERATE_RET uni_system_init(VOID);
+
+_UNI_SYSTEM_EXT \
+INT Add_Pkcs(char *p, int len);
+
+_UNI_SYSTEM_EXT \
+int decodeArr(CONST CHAR *str, struct ArrPosition arrPosition[],int arr_pos_num);
 
 #ifdef __cplusplus
 }

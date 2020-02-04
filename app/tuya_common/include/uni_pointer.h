@@ -106,6 +106,9 @@ LIST_HEAD name = LIST_HEAD_INIT(name)
 #define list_for_each(pos, head) \
 for (pos = (head)->next; pos != (head); pos = pos->next)
 
+
+#define tuya_list_add_tail list_add_tail
+#define tuya_list_empty list_empty
 /***********************************************************
 *************************variable define********************
 ***********************************************************/

@@ -252,14 +252,6 @@ VOID ws_db_reset(VOID);
 
 VOID get_muid_string(CHAR *muid_str);
 
-/***********************************************************
-*  Function: clear_prod_test_mode
-*  Input: 
-*  Output: 
-*  Return: OPERATE_RET
-***********************************************************/
-__TUYA_WS_DB_EXT \
-VOID clear_prod_test_mode(VOID);
 
 /***********************************************************
 *  Function: ws_db_set_user_param
@@ -308,6 +300,29 @@ OPERATE_RET ws_db_set_ctei_info(IN CONST CHAR* in_tab);
 *  Return: OPERATE_RET
 ***********************************************************/
 OPERATE_RET ws_db_get_ctei_info(OUT CHAR* out_tab, IN CONST UINT out_lmt);
+
+/***********************************************************
+*  Function: ws_db_set_log_seq
+*  Input: 
+*  Output: 
+*  Return: OPERATE_RET
+***********************************************************/
+OPERATE_RET ws_db_set_log_seq(IN CONST CHAR * log_data);
+/***********************************************************
+*  Function: ws_db_get_log_seq
+*  Input: 
+*  Output: 
+*  Return: OPERATE_RET
+***********************************************************/
+OPERATE_RET ws_db_get_log_seq(OUT CHAR *log_data, IN CONST INT log_data_len);
+
+
+OPERATE_RET ws_db_set_psk_key(IN CONST CHAR *key);
+
+OPERATE_RET ws_db_get_psk_key(OUT CHAR *key,IN INT len);
+
+
+
 
 #ifdef __cplusplus
 }

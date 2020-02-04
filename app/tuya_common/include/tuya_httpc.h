@@ -34,6 +34,7 @@
     #define TY_SMART_DOMAIN_AY "https://a3.tuyacn.com/gw.json"		//China
     #define TY_SMART_DOMAIN_AZ "https://a3.tuyaus.com/gw.json"		//American
     #define TY_SMART_DOMAIN_EU "https://a3.tuyaeu.com/gw.json"		//Europe
+    #define TY_SMART_DOMAIN_UE "https://a3-ueaz.tuyaus.com/gw.json"       //微软美东
     #define TY_SMART_MQTT      "mq.gw.tuyacn.com"
     #define TY_SMART_MQTTBAK   "mq.gw1.tuyacn.com"
 
@@ -52,9 +53,19 @@
     #define TY_SMART_DOMAIN_AY "http://a.gw.tuyacn.com/gw.json"                  //China
     #define TY_SMART_DOMAIN_AZ "http://a.gw.tuyaus.com/gw.json"					//American
     #define TY_SMART_DOMAIN_EU "http://a.gw.tuyaeu.com/gw.json"					//Europe
+    #define TY_SMART_DOMAIN_UE "http://a1-ueaz.tuyaus.com/gw.json"       //微软美东
     #define TY_SMART_MQTT      "mq.gw.tuyacn.com"
     #define TY_SMART_MQTTBAK   "mq.gw1.tuyacn.com"
     #endif
+
+#endif
+#if (WPS_CONFIG == 1)  
+
+#if 0
+#define  TY_SMART_DOMAIN_DX "http://171.208.222.146/gw.json"     //预发环境 dianxin_addr
+#else
+#define  TY_SMART_DOMAIN_DX "http://171.208.222.212/gw.json"     //线上环境
+#endif
 
 #endif
 
@@ -93,6 +104,9 @@
 
 // HTTP/HTTPS  POST 1.0
 #define TI_GET_REGION_CFG_GET "tuya.device.region.config.get"
+#define TI_GET_DEV_INFO_SYNC "tuya.device.info.sync"
+#define TI_GET_PSK_KEY "tuya.device.uuid.pskkey.get"
+
 
 typedef struct{
     CHAR std_TimeZone[TIME_ZONE_LEN+1];
@@ -124,15 +138,6 @@ typedef OPERATE_RET(*ASTRO_TIMER_CB)(IN CONST BYTE *data,\
 *  note: 上报设备日志，如重启原因，离线时间，联网状态等
 ***********************************************************/
 OPERATE_RET httpc_ug_log(VOID);
-
-/***********************************************************
-*  Function: httpc_ug_log_custom
-*  Input:
-*  Output:
-*  Return: OPERATE_RET
-*  note: 上报设备日志，如重启原因，离线时间，联网状态等
-***********************************************************/
-OPERATE_RET httpc_ug_log_custom(IN CONST CHAR *log, IN CONST INT log_len);
 
 /***********************************************************
 *  Function: httpc_aes_init
@@ -335,8 +340,14 @@ OPERATE_RET httpc_get_chcode(INOUT CH_CODE_ST *ch_code);
 *  Return: OPERATE_RET
 *  参照返回值列表
 ***********************************************************/
-OPERATE_RET httpc_post_ctcc_code(IN CONST CHAR* url,IN CONST CHAR* send_buf, IN CONST UINT send_len);
+OPERATE_RET httpc_post_ctcc_code(IN CONST CHAR* url,IN CONST CHAR* send_buf, IN CONST UINT send_len, IN CONST HTTP_UP_OP cpy_num);
 
+/***********************************************************
+*  Function: httpc_get_dev_info
+*  Return: OPERATE_RET
+*  参照返回值列表
+***********************************************************/
+OPERATE_RET httpc_get_dev_info(VOID);
 
 #ifdef __cplusplus
 }

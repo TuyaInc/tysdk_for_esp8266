@@ -25,6 +25,7 @@ Copyright(C),2018-2020, 涂鸦科技 www.tuya.comm
 #define SYSTEM_LINUX                    100
 #define SYSTEM_LITEOS                   120
 
+#define HIGH_WATER_MARK_DEBUG           0
 
 
 #if (ENABLE_8266TLS == 1)
@@ -41,10 +42,18 @@ Copyright(C),2018-2020, 涂鸦科技 www.tuya.comm
 typedef int BOOL_T;
 typedef void *PVOID_T;
 typedef signed int INT_T;
+typedef unsigned int TIME_T;
 typedef unsigned int UINT_T;
 typedef unsigned char BYTE_T;
+typedef BYTE_T *PBYTE_T;
 typedef char CHAR_T;
+typedef CHAR_T *PCHAR_T;
 typedef unsigned char UCHAR_T;
+typedef unsigned short WORD_T;
+typedef WORD_T *PWORD_T;
+typedef unsigned int DWORD_T;
+typedef DWORD_T *PDWORD_T;
+
 
 
 

@@ -8,6 +8,7 @@
 
     #define __time_t_defined // for timt_t redefined
     #include "com_def.h"
+    #include "tuya_cloud_types.h"
     #include "error_code.h"
     #include "esp_common.h"
     #include "mem_pool.h"

@@ -142,7 +142,11 @@
 #define OPRT_HTTPS_NO_SUPPORT_RANGE               (118)
 #define OPRT_GW_FW_SIZE_OVER_MAX_SIZE             (119)
 #define OPRT_HMAC_DISMATCH                        (120)
-#define OPRT_UG_FLASH_BIN_CHECKSUM_ERR           (121)
+#define OPRT_NOT_FOUND                            (121)
+#define OPRT_UG_FLASH_BIN_CHECKSUM_ERR            (122)
+#define OPRT_LOG_SEQ_LOCKED                       (123)
+#define OPRT_LOG_SEQ_DONT_LOCKED                  (124)
+#define OPRT_HTTP_NO_ENCRPT                       (125)
 
 
 

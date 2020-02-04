@@ -42,6 +42,8 @@
 #define CFG_VER_LEN 10
 #define MAC_ADDR_LEN 12
 #define AUTH_KEY_LEN 32
+#define PSK_KEY_LEN 40
+
 //
 #define WXAPPID_LEN 32
 #define REGION_LEN 2
@@ -51,6 +53,14 @@
 #define LON_LAT_LMT 64
 #define CH_NAME_LMT 10
 #define CH_CODE_LMT 20
+#define CTEI_SN_LEN 32
+
+#if (WPS_CONFIG == 1)
+#define NOT_WPS_MODE 0
+#define WPS_MODE     1
+#define WPS_OPEN     1
+#endif
+
 
 // fw upgrade status
 typedef enum {
@@ -240,6 +250,12 @@ typedef BYTE DP_PV_STAT_E;
 #define VALID_ULING 2 // 数据云端上传中 add by nzy 20150808
 #define VALID_CLOUD 3 // 本地有效数据与服务端一致
 
+
+typedef BYTE HTTP_UP_OP;
+#define CTCC_JT_UP 0    //电信集团数据上报
+#define CTCC_NJ_UP 1    //电信南京数据上报
+#define CUCC_JT_UP 2    //联通集团数据上报  
+
 typedef struct {
     DP_DESC_IF_S dp_desc;
     DP_PROP_VALUE_U prop;
@@ -270,12 +286,19 @@ typedef struct {
 	CHAR region[REGION_LEN + 1];
 	CHAR regist_key[REGIST_KEY_LEN + 1];
     CHAR wx_app_id[WXAPPID_LEN+1];
-    CHAR ch_name[CH_NAME_LMT];
+    CHAR ch_name[CH_NAME_LMT+1];
+    CHAR compy_name[CH_NAME_LMT+1];
+    #if (WPS_CONFIG == 1)  
+    INT  mqtt_alive_tim;
+    INT  wps_falg;
+    #endif
+
 }GW_ACTV_IF_S;
 
 typedef struct {
     CHAR prod_idx[PROD_IDX_LEN+1];
     CHAR mac[MAC_ADDR_LEN+1];
+	CHAR psk_key[PSK_KEY_LEN+1];
     CHAR auz_key[AUTH_KEY_LEN+1]; //authorize key
     BOOL prod_test; // production test
 }PROD_IF_REC_S;
@@ -283,6 +306,7 @@ typedef struct {
 typedef struct{
     CHAR ch_name[CH_NAME_LMT+1];
     CHAR ch_code[CH_CODE_LMT+1];
+    CHAR ch_sn[CTEI_SN_LEN+1];
 }CH_CODE_ST;
 
 typedef BYTE GW_STAT_E;
@@ -354,7 +378,7 @@ typedef struct {
 /***********************************************************
 *************************variable define********************
 ***********************************************************/
-#define BS_VER "5.43"
+#define BS_VER "5.56"
 #define PT_VER "2.2"
 #define LAN_PRO_VER "3.3"
 #define CD_VER "1.0.0"

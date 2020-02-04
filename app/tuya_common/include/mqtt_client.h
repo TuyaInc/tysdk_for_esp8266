@@ -29,11 +29,26 @@
 typedef VOID (*MQ_CALLBACK)(BYTE *data,UINT len);
 
 #define MQ_DOMAIN_NAME
+
 #ifdef MQ_DOMAIN_NAME // ����
 #define MQ_DOMAIN_ADDR "mq.gw.airtakeapp.com"
 #define MQ_DOMAIN_ADDR1 "mq.gw1.airtakeapp.com"
 #define MQ_DOMAIN_PORT_TLS_PSK  8886
 #define MQ_DOMAIN_PORT_NO_TLS   1883
+
+
+#if (WPS_CONFIG == 1)  
+
+#if 0
+#define MQ_DOMAIN_ADDR_DX   "171.208.222.146"    //预发环境 dianxin_addr
+#define MQ_DOMAIN_PORT_DX   6044
+#else
+#define MQ_DOMAIN_ADDR_DX "171.208.222.212"      //线上环境
+#define MQ_DOMAIN_PORT_DX 6023
+#endif
+
+#endif
+
 
 #else
 #define MQ_DOMAIN_ADDR "192.168.0.19"
@@ -58,6 +73,7 @@ typedef VOID (*MQ_CALLBACK)(BYTE *data,UINT len);
 #define PRO_UG_SUMER_TABLE 41 //ug sumer timer table
 #define PRO_MQ_QUERY_DP  31  /* cloud -> dev query dp stat */
 #define PRO_CMD_THINGCONFIG     51      //mq_thingconfig
+#define PRO_MQ_LOG_CONFIG       55      /* log config */
 
 /***********************************************************
 *************************variable define********************
@@ -77,6 +93,18 @@ __MQTT_CLIENT_EXT \
 VOID mq_client_init(IN CONST CHAR *clientid,\
                     IN CONST CHAR *username,\
                     IN CONST INT alive);
+
+
+/***********************************************************
+*  Function: mq_client_set_alive_timer
+*  Input: alive second
+*  Output: 
+*  Return: none
+***********************************************************/
+#if (WPS_CONFIG == 1)  
+__MQTT_CLIENT_EXT \
+VOID mq_client_set_alive_timer(INT time_s);
+#endif
 
 /***********************************************************
 *  Function: mq_client_start
@@ -122,6 +150,16 @@ OPERATE_RET mqtt_client_smart_pub(IN CONST UINT pro,IN CONST BYTE *data);
 ***********************************************************/
 __MQTT_CLIENT_EXT \
 OPERATE_RET mqc_obj_resp_ackid(IN CONST CHAR *ackid);
+
+
+/***********************************************************
+*  Function: mqtt_pub_realtime_log
+*  Input:
+*  Output:
+*  Return: none
+***********************************************************/
+__MQTT_CLIENT_EXT \
+OPERATE_RET mqtt_pub_realtime_log(IN CONST CHAR *data, UINT len);
 
 
 #ifdef __cplusplus

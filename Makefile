@@ -26,6 +26,27 @@ SPI_SPEED?=40
 SPI_MODE?=QIO
 SPI_SIZE_MAP?=0
 
+speed_index?=0
+#crystalfreq 40->0 26->1 24->2
+crystalfreq?=1
+disable_cfg?=0
+
+crystal_bin_suffix=
+ifeq ($(CRYSTAL_FREQ), 40M)
+    crystalfreq=0
+	crystal_bin_suffix=_40M
+endif
+
+ifeq ($(CRYSTAL_FREQ), 26M)
+    crystalfreq=1
+	crystal_bin_suffix=_26M
+endif
+
+ifeq ($(CRYSTAL_FREQ), 24M)
+    crystalfreq=2
+	crystal_bin_suffix=_24M
+endif
+
 ifeq ($(BOOT), new)
     boot = new
 else
@@ -48,14 +69,18 @@ endif
 
 ifeq ($(SPI_SPEED), 26.7)
     freqdiv = 1
+	speed_index = 1
 else
     ifeq ($(SPI_SPEED), 20)
         freqdiv = 2
+        speed_index = 2
     else
         ifeq ($(SPI_SPEED), 80)
             freqdiv = 15
+            speed_index = 3
         else
             freqdiv = 0
+            speed_index = 0
         endif
     endif
 endif
@@ -310,6 +335,22 @@ ifeq ($(app), 2)
 		echo "package error"; \
 	fi
 	@cd -
+#以下使用python自动打包合成生产固件，APP_BIN_NAME/USER_SW_VER/target_file
+	-rm -rf  ../tools/combine_bin.pyc
+	@echo "build QIO"
+	python ../tools/makecombine.py ../bin/boot_v1.7.bin    ../bin/upgrade/$(APP_BIN_NAME)\(1\)_$(USER_SW_VER).bin  ../bin/esp_init_data_default.bin  ../bin/blank.bin   ../bin/upgrade/$(APP_BIN_NAME)_target$(crystal_bin_suffix)_QIO_TLS_$(USER_SW_VER).bin 0 $(speed_index) $(size_map) $(crystalfreq) $(disable_cfg)
+	@echo "build DOUT"
+	python ../tools/makecombine.py ../bin/boot_v1.7.bin    ../bin/upgrade/$(APP_BIN_NAME)\(1\)_$(USER_SW_VER).bin  ../bin/esp_init_data_default.bin  ../bin/blank.bin   ../bin/upgrade/$(APP_BIN_NAME)_target$(crystal_bin_suffix)_DOUT_TLS_$(USER_SW_VER).bin 3 $(speed_index) $(size_map) $(crystalfreq) $(disable_cfg)
+
+
+	mkdir -p ../bin/upgrade/$(APP_BIN_NAME)/$(USER_SW_VER)
+	mv -f  ../bin/upgrade/$(APP_BIN_NAME)\(1\)_$(USER_SW_VER).bin  ../bin/upgrade/$(APP_BIN_NAME)/$(USER_SW_VER)/$(APP_BIN_NAME)_TLS_$(USER_SW_VER).bin
+	mv -f  ../bin/upgrade/$(APP_BIN_NAME)_ug_$(USER_SW_VER).bin  ../bin/upgrade/$(APP_BIN_NAME)/$(USER_SW_VER)/$(APP_BIN_NAME)_ug_TLS_$(USER_SW_VER).bin	
+	mv -f  ../bin/upgrade/$(APP_BIN_NAME)_target$(crystal_bin_suffix)_QIO_TLS_$(USER_SW_VER).bin  ../bin/upgrade/$(APP_BIN_NAME)/$(USER_SW_VER)/
+	mv -f  ../bin/upgrade/$(APP_BIN_NAME)_target$(crystal_bin_suffix)_DOUT_TLS_$(USER_SW_VER).bin  ../bin/upgrade/$(APP_BIN_NAME)/$(USER_SW_VER)/
+
+
+
 endif
 
 	@echo "!!!"

@@ -9,7 +9,8 @@ typedef PVOID_T tuya_tls_hander;
 
 typedef INT_T (*tuya_tls_send_cb)( VOID *p_custom_net_ctx, CONST BYTE_T *buf, SIZE_T len);
 typedef INT_T (*tuya_tls_recv_cb)( VOID *p_custom_net_ctx, BYTE_T *buf, SIZE_T len);
-VOID tuya_tls_register_constant(IN CHAR_T *p_uuid, IN CHAR_T *p_authkey);
+VOID tuya_tls_register_constant(IN CHAR_T *p_uuid, IN CHAR_T *p_authkey, IN CHAR_T *p_psk_key);
+VOID tuya_tls_register_psk(IN CHAR_T *p_psk_key);
 
 VOID tuya_tls_set_ssl_verify(IN CONST INT_T verify_mode);
 INT_T tuya_tls_register_x509_crt_der(VOID *p_ctx, UCHAR_T *p_der, UINT_T der_len);

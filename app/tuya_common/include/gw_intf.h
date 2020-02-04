@@ -259,6 +259,28 @@ VOID set_getprt_success(VOID);
 __GW_INTF_EXT \
 OPERATE_RET gw_register_cbs(IN CONST TY_IOT_CBS_S *cbs);
 
+#if (WPS_CONFIG == 1)  
+
+/***********************************************************
+*  Function: get_dx_sever_flg
+*  Input: none
+*  Output: 
+*  Return: CHAR *
+***********************************************************/
+__GW_INTF_EXT \
+BOOL get_dx_sever_flg(VOID);
+
+/***********************************************************
+*  Function: set_dx_sever_flg
+*  Input: none
+*  Output: 
+*  Return:
+***********************************************************/
+__GW_INTF_EXT \
+VOID set_dx_sever_flg(BOOL flg);
+
+#endif
+
 #ifdef __cplusplus
 }
 #endif

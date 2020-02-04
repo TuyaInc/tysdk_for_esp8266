@@ -30,6 +30,8 @@ typedef BYTE WF_CFG_MTHD_SEL; // wifi config method select
 #define WCM_LOW_POWER 1 // with low power mode
 #define WCM_SPCL_MODE 2 // special with low power mode
 #define WCM_OLD_CPT   3 // old mode scan
+#define WCM_LOW_POWER_AUTOCFG 4 // with low power mode && auto cfg
+#define WCM_SPCL_AUTOCFG 5 // special with low power mode && auto cfg
 
 
 /***********************************************************
@@ -55,6 +57,18 @@ VOID wifi_country_code_init(VOID);
 *  Return: 
 ***********************************************************/
 OPERATE_RET wifi_nw_init(VOID);
+
+
+#if (WPS_CONFIG == 1) 
+/***********************************************************
+*  Function: set_smart_only
+*  Input: 
+*  Output: 
+*  Return: 
+***********************************************************/
+__WF_SDK_ADPT_EXT \
+VOID set_smart_only(VOID);
+#endif
 
 /***********************************************************
 *  Function: set_ap_only
@@ -201,6 +215,49 @@ VOID wf_end_smt_cfg_manual(VOID);
 ***********************************************************/
 __WF_SDK_ADPT_EXT \
 VOID wifi_param_init(WF_CFG_MTHD_SEL metd);
+
+/***********************************************************
+* 设置低功耗模式/spcl模式下超时时间
+* 须在app_init中app_cfg_set之前调用
+* 入参单位为秒，最小为60s，默认3分钟
+***********************************************************/
+__WF_SDK_ADPT_EXT \
+VOID set_wf_cfg_timeout(INT timeout);
+
+
+/***********************************************************
+*  Function: wifi_param_init
+*  Input: WIFI_EVENT_CB cb
+*  Return: OPERATE_RET
+***********************************************************/
+__WF_SDK_ADPT_EXT \
+OPERATE_RET register_wifi_event_cb(wifi_event_handler_cb_t cb);
+
+/***********************************************************
+*  Function: nw_cfg_stop_cb
+*  Input: void
+*  Return: void
+***********************************************************/
+__WF_SDK_ADPT_EXT \
+VOID nw_cfg_stop_cb(VOID);
+
+/***********************************************************
+*	Function: select_cfg_mode_fac
+*	Output:
+*	Return: none
+*	Note: none
+***********************************************************/
+__WF_SDK_ADPT_EXT \
+OPERATE_RET select_cfg_mode_fac(void);
+
+/***********************************************************
+*  Function: ty_wifi_get_mac_addr
+*  Input: void
+*  Return: void
+***********************************************************/
+__WF_SDK_ADPT_EXT \
+OPERATE_RET ty_wifi_get_chip_mac_addr(CHAR* mac_addr,CHAR len);
+
 
 #ifdef __cplusplus
 }

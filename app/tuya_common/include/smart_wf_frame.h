@@ -14,6 +14,7 @@
     #include "wmtime.h"
     #include "tuya_ws_db.h"
     #include "tuya_fw_ug.h"
+	#include "log_seq_adpt.h"
     
 #ifdef __cplusplus
 	extern "C" {
@@ -45,6 +46,8 @@ typedef VOID (*SMART_FRAME_CB)(SMART_CMD_E cmd,cJSON *root);
 typedef VOID (*GW_RESET_CB)(VOID);
 
 typedef VOID (*APP_PROD_CB)(BOOL flag, CHAR rssi);
+
+typedef OPERATE_RET (*IR_SPECIAL_DP_CB)(USHORT dpid,cJSON *dp_obj);
 
 typedef enum {
     CFG_SUCCESS = 0,
@@ -91,6 +94,9 @@ typedef struct {
     DP_DATA_T_U data;  //dp����
 }STATS_DATA_S;
 
+typedef struct {
+    IR_SPECIAL_DP_CB ir_dp_cb; 
+}TY_IOT_SP_DP_CBS_S;
 
 
 /***********************************************************
@@ -356,6 +362,16 @@ __SMART_WF_FRAME_EXT \
 WF_CFG_MODE_E tuya_get_wf_cfg_mode(VOID);
 
 /***********************************************************
+*  Function: direct_single_dev_reset
+*  Input: none
+*  Output:
+*  Return: none
+*  Note: none
+***********************************************************/
+__SMART_WF_FRAME_EXT \
+OPERATE_RET direct_single_dev_reset(VOID);
+
+/***********************************************************
 *  Function: single_dev_reset_factory
 *  Input: none
 *  Output: 
@@ -475,16 +491,6 @@ void set_console(BOOL uart1);
 __SMART_WF_FRAME_EXT \
 void set_prod_ssid(CHAR *ssid);
 
-
-/***********************************************************
-*  Function: http_post_log
-*  Input: log and len
-*  Output:
-*  Return:
-*  Note:
-***********************************************************/
-OPERATE_RET http_post_log(IN CONST CHAR *log, IN CONST INT len);
-
 /***********************************************************
 *  Function: astro_send_request_msg
 *  Input:    plon  经度
@@ -494,9 +500,49 @@ OPERATE_RET http_post_log(IN CONST CHAR *log, IN CONST INT len);
 *  Return: none
 *  Note: none
 ***********************************************************/
+__SMART_WF_FRAME_EXT \
 OPERATE_RET astro_send_request_msg(IN CONST CHAR *plon,IN CONST CHAR *plat,
                                          IN CONST ASTRO_TIMER_CB pfun_cb);
 
+
+/***********************************************************
+*	 Function: smart_frame_send_ap_udp_msg
+*	 Input:   data_code  上报错误码
+*	 Output: 
+*	 Return: none
+*	 Note: none
+***********************************************************/
+__SMART_WF_FRAME_EXT \
+OPERATE_RET smart_frame_send_ap_udp_msg(IN CONST BYTE data_code);
+
+/***********************************************************
+*	 Function: smart_frame_send_ap_log_msg
+*	 Input:   type  上报类型
+*	 Output: 
+*	 Return: none
+*	 Note: none
+***********************************************************/
+__SMART_WF_FRAME_EXT \
+OPERATE_RET smart_frame_send_ap_log_msg(IN CONST LOG_SEQ_LOG_FILE_RP*rp_log);
+
+/***********************************************************
+*	 Function: smart_frame_send_rp_timer_info_msg
+*	 Input:   info  上报信息
+*	 Output: 
+*	 Return: none
+*	 Note: none
+***********************************************************/
+__SMART_WF_FRAME_EXT \
+OPERATE_RET smart_frame_send_rp_timer_info_msg(CHAR*info);
+
+/***********************************************************
+*	 Function: tuya_reset_fac
+*	 Input:   void
+*	 Return: none
+*	 Note: none
+***********************************************************/
+__SMART_WF_FRAME_EXT \
+OPERATE_RET  tuya_reset_fac(VOID);
 
 #ifdef __cplusplus
 }

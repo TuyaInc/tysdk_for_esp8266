@@ -114,6 +114,20 @@ OPERATE_RET http_inf_client_post(IN CONST CHAR *url,\
                                  IN CONST BYTE *data,\
                                  IN CONST UINT len,\
                                  INOUT PVOID *out);
+
+/***********************************************************
+*  Function: http_inf_client_post
+ *  Input: url callback content len
+ *  Output: pri_data 
+ *  Return: OPERATE_RET
+ ***********************************************************/
+__HTTP_INF_EXT \
+OPERATE_RET http_inf_client_post_nj(IN CONST CHAR *url,\
+                                   IN CONST HTTP_INF_CB callback,\
+                                    IN CONST BYTE *data,\
+                                    IN CONST UINT len,\
+                                    INOUT PVOID *out);
+
 /***********************************************************
 *  Function: http_client_put
 *  Input: url callback

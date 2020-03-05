@@ -1,0 +1,11 @@
+*.o
+*.d
+*.map
+*.nmap
+*.asm
+*.axf
+*.out
+.output/
+bin/upgrade/
+tools/*.pyc
+app/package/package

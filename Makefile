@@ -334,7 +334,7 @@ ifeq ($(app), 2)
 	else \
 		echo "package error"; \
 	fi
-	@cd -
+#	@cd -
 #以下使用python自动打包合成生产固件，APP_BIN_NAME/USER_SW_VER/target_file
 	-rm -rf  ../tools/combine_bin.pyc
 	@echo "build QIO"

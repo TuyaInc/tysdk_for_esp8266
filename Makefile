@@ -333,6 +333,7 @@ ifeq ($(app), 2)
 		echo "Generate $(APP_BIN_NAME)_ug_$(USER_SW_VER).bin package in folder bin/upgrade success"; \
 	else \
 		echo "package error"; \
+		exit 1; \
 	fi
 #	@cd -
 #以下使用python自动打包合成生产固件，APP_BIN_NAME/USER_SW_VER/target_file

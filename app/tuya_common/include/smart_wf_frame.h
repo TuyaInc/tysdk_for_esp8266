@@ -40,10 +40,15 @@ typedef enum {
 	ACK_OEM, //multi
 }ACK_TYPE_E;
 
+typedef enum {
+	RESET_DEV = 0, //reset 
+	RESET_FACTORY, //reset fac
+}RESET_TYPE_E;
+
 // data format: {"1":100,"2":200}
 typedef VOID (*SMART_FRAME_CB)(SMART_CMD_E cmd,cJSON *root);
 
-typedef VOID (*GW_RESET_CB)(VOID);
+typedef VOID (*GW_RESET_CB)(RESET_TYPE_E type);
 
 typedef VOID (*APP_PROD_CB)(BOOL flag, CHAR rssi);
 
@@ -542,7 +547,7 @@ OPERATE_RET smart_frame_send_rp_timer_info_msg(CHAR*info);
 *	 Note: none
 ***********************************************************/
 __SMART_WF_FRAME_EXT \
-OPERATE_RET  tuya_reset_fac(VOID);
+OPERATE_RET  tuya_reset_fac(RESET_TYPE_E type);
 
 #ifdef __cplusplus
 }

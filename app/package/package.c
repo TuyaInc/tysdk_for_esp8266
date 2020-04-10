@@ -82,6 +82,14 @@ int main(int argc,char *argv[])
         }
         #endif
 
+		if(file_size >= 480*1024) {     
+			printf("\r\n*************************file package error！！！！ ATTENTION********************************\r\n");
+            printf("ERROR file_size:%d >= 480K\n",file_size);
+			printf("\r\n*************************file package error！！！！ ATTENTION********************************\r\n");
+            goto ERR_EXIT;
+        }
+		
+		
         pkg_fh->ugf[i].len = HTONL(file_size);
         if(0 == i) {
             pkg_fh->ugf[i].offset = HTONL(ug_pkg_desc_len);

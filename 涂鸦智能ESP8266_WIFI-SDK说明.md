@@ -52,6 +52,14 @@ app_name 为项目应用名称（更改为项目名称），目录中 include �
 2）编译无日志输出的固件，例如 sample_pk，版本号 1.0.0
 ./build_app.sh demos/sample_pk sample_pk1.0.0 
 
+生成物： xxx_DOUT_TLS_1.0.0.bin   8285全量烧录文件
+
+​				xxx_QIO_TLS_1.0.0.bin        8286全量烧录文件
+
+​				xxx_UA_TLS_1.0.0.bin          用户区烧录文件
+
+​				xxx_UG_TLS_1.0.0.bin          OTA升级文件
+
 ## 应用实现接口
 
 1）设置应用的名称和版本号，此函数直接放在应用中即可

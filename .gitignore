@@ -1,0 +1,5 @@
+output/
+platforms/
+sdk/
+build_app.sh
+.output/

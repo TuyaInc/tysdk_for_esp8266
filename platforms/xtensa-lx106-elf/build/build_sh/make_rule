@@ -1,0 +1,144 @@
+#############################################################
+# Required variables for each makefile
+# Discard this section from all parent makefiles
+# Expected variables (with automatic defaults):
+#   CSRCS (all "C" files in the dir)
+#   SUBDIRS (all subdirs with a Makefile)
+#   GEN_LIBS - list of libs to be generated ()
+#   GEN_IMAGES - list of object file images to be generated ()
+#   GEN_BINS - list of binaries to be generated ()
+#   COMPONENTS_xxx - a list of libs/objs in the form
+#     subdir/lib to be extracted and rolled up into
+#     a generated lib/image xxx.a ()
+#
+TARGET = eagle
+#FLAVOR = release
+FLAVOR ?= debug
+
+#EXTRA_CCFLAGS += -u
+
+APPDIR = .
+LDDIR = ../ld
+
+CCFLAGS += -Os
+CCFLAGS += -fno-aggressive-loop-optimizations
+
+TARGET_LDFLAGS =		\
+	-nostdlib		\
+	-Wl,-EL \
+	--longcalls \
+	--text-section-literals
+
+ifeq ($(FLAVOR),debug)
+    TARGET_LDFLAGS += -g -O2
+    DEBUG = 1
+endif
+
+ifeq ($(FLAVOR),release)
+    TARGET_LDFLAGS += -g -O0
+    DEBUG = 0
+endif
+
+LINK_FLASH_LIB=
+ifneq ($(ESP8266_1M),1)
+	LINK_FLASH_LIB += -lkv_storge
+	LINK_FLASH_LIB += -luf_file
+endif
+
+LINK_TLS_LIB=
+ifeq ($(ENABLE_8266TLS),1)
+	LINK_TLS_LIB += -ltls
+endif
+
+# -------------------------------------------------------------------
+# add tuya application components.mk
+# -------------------------------------------------------------------
+APP_COMPONENT_DIR := $(TOP_DIR)/$(SDK_TARGET_APP_PATH)/user
+sinclude $(APP_COMPONENT_DIR)/components.mk
+ifdef COMPONENTS
+	TY_SRC_DIRS += $(foreach n, $(COMPONENTS), $(shell find $(TOP_DIR)/components/$(n)/src -type d))
+	TY_INC_DIRS += $(foreach n, $(COMPONENTS), $(shell find $(TOP_DIR)/components/$(n)/include -type d))
+	TY_COMPONENT_SRC_C += $(foreach dir, $(TY_SRC_DIRS), $(wildcard $(dir)/*.c)) 
+	TY_COMPONENT_SRC_C += $(foreach dir, $(TY_SRC_DIRS), $(wildcard $(dir)/*.cpp)) 
+	TY_COMPONENT_SRC_C += $(foreach dir, $(TY_SRC_DIRS), $(wildcard $(dir)/*.s)) 
+	TY_COMPONENT_SRC_C += $(foreach dir, $(TY_SRC_DIRS), $(wildcard $(dir)/*.S)) 
+	TY_COMPONENT_INCLUDES += $(foreach base_dir, $(TY_INC_DIRS), $(addprefix -I , $(base_dir))) 
+endif
+
+ifdef COMPONENT_LIBS
+	APP_THIRD_LIB = $(foreach lib_name, $(COMPONENT_LIBS),$(addprefix -l, $(patsubst lib%.a,%,$(lib_name))))
+endif
+
+LINKFLAGS_eagle.app.v6 = \
+	-L../../../../sdk/lib/fac_lib        \
+	-L../../../../sdk/lib/tuya_lib        \
+	-L../../../../$(SDK_TARGET_APP_PATH)/user        \
+	-Wl,--gc-sections   \
+	-nostdlib	\
+    -T$(LD_FILE)   \
+	-Wl,--no-check-sections	\
+    -u call_user_start	\
+	-Wl,-static						\
+	-Wl,--start-group					\
+	-lminic \
+	-lgcc					\
+	-lhal					\
+	-lphy	\
+	-lpp	\
+	-lnet80211	\
+	-lwpa	\
+	-lmain	\
+	-lfreertos	\
+	-llwip	\
+	-lsmartconfig  \
+	-lcrypto \
+	-lacalg \
+	-laipwm \
+	-lpwm \
+	-lespconn \
+	-lwps	\
+	-ldriver \
+	-lbase \
+	-lsystem \
+	-lpsm \
+	-ltime \
+	-lhttpc \
+	-ltuya_sdk \
+	$(LINK_TLS_LIB) \
+	-lffc \
+	$(LINK_FLASH_LIB) \
+	$(APP_THIRD_LIB) \
+	$(DEP_LIBS_eagle.app.v6)					\
+	-Wl,--end-group
+
+
+DEPENDS_eagle.app.v6 = \
+                $(LD_FILE) \
+                $(LDDIR)/eagle.rom.addr.v6.ld
+
+#############################################################
+# Configuration i.e. compile options etc.
+# Target specific stuff (defines etc.) goes in here!
+# Generally values applying to a tree are captured in the
+#   makefile at its root level - these are then overridden
+#   for a subtree within the makefile rooted therein
+#
+
+UNIVERSAL_TARGET_DEFINES = -DDEBUG=$(DEBUG) -DUSER_SW_VER=\"$(USER_SW_VER)\" -DAPP_BIN_NAME=\"$(APP_BIN_NAME)\" \
+	-DENABLE_8266TLS=$(ENABLE_8266TLS) -DESP8266_1M=$(ESP8266_1M) -DENABLE_AIRKISS=$(ENABLE_AIRKISS) -DWPS_CONFIG=$(WPS_CONFIG) 
+
+
+# Other potential configuration flags include:
+#	-DTXRX_TXBUF_DEBUG
+#	-DTXRX_RXBUF_DEBUG
+#	-DWLAN_CONFIG_CCX
+CONFIGURATION_DEFINES =	-DICACHE_FLASH
+
+DEFINES +=				\
+	$(UNIVERSAL_TARGET_DEFINES)	\
+	$(CONFIGURATION_DEFINES)
+
+DDEFINES +=				\
+	$(UNIVERSAL_TARGET_DEFINES)	\
+	$(CONFIGURATION_DEFINES)
+

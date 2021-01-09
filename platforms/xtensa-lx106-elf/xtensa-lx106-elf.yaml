@@ -1,0 +1,21 @@
+spec:
+  name: xtensa-lx106-elf
+  version: 1.0.5
+  summary: embed module created by embedded-cli.
+  homepage: YOUR_HOMEPAGE
+  license:
+    type: MIT
+    file: LICENSE
+  author:
+    name: embedCi
+    email: ci_manage
+  source:
+    git: https://code.registry.wgine.com/hardware_wifi_soc/xtensa-lx106-elf.git
+    tag: 1.0.5
+
+
+
+
+
+
+

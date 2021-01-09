@@ -4,6 +4,15 @@ ifndef PDIR
 
 endif
 
+THISDIR:=$(abspath $(dir $(lastword $(MAKEFILE_LIST))))
+ifdef TARGET_APP_PATH
+$(eval SDK_DIR:=$(realpath $(THISDIR)/../..))
+endif
+ifdef SDK_TARGET_APP_PATH
+$(eval SDK_DIR:=$(realpath $(THISDIR)))
+endif
+
+TOOLCHAIN:=$(SDK_DIR)/platforms/$(TARGET_PLATFORM)/bin
 ifeq ($(COMPILE), xcc)
     AR = xt-ar
 	CC = xt-xcc
@@ -12,12 +21,12 @@ ifeq ($(COMPILE), xcc)
 	OBJCOPY = xt-objcopy
 	OBJDUMP = xt-objdump
 else
-	AR = xtensa-lx106-elf-ar
-	CC = xtensa-lx106-elf-gcc
-	NM = xtensa-lx106-elf-nm
-	CPP = xtensa-lx106-elf-g++
-	OBJCOPY = xtensa-lx106-elf-objcopy
-	OBJDUMP = xtensa-lx106-elf-objdump
+	AR = $(TOOLCHAIN)/xtensa-lx106-elf-ar
+	CC = $(TOOLCHAIN)/xtensa-lx106-elf-gcc
+	NM = $(TOOLCHAIN)/xtensa-lx106-elf-nm
+	CPP = $(TOOLCHAIN)/xtensa-lx106-elf-g++
+	OBJCOPY = $(TOOLCHAIN)/xtensa-lx106-elf-objcopy
+	OBJDUMP = $(TOOLCHAIN)/xtensa-lx106-elf-objdump
 endif
 
 BOOT?=none
@@ -30,6 +39,15 @@ speed_index?=0
 #crystalfreq 40->0 26->1 24->2
 crystalfreq?=1
 disable_cfg?=0
+SDK_FLASH_SIZE=
+flash_bin_suffix=
+ifeq ($(ESP8266_1M), 1)
+    SDK_FLASH_SIZE=8Mbit
+    flash_bin_suffix=_8M
+else
+    SDK_FLASH_SIZE=16Mbit
+    flash_bin_suffix=_16M
+endif
 
 crystal_bin_suffix=
 ifeq ($(CRYSTAL_FREQ), 40M)
@@ -335,21 +353,23 @@ ifeq ($(app), 2)
 		echo "package error"; \
 		exit 1; \
 	fi
-#	@cd -
 #以下使用python自动打包合成生产固件，APP_BIN_NAME/USER_SW_VER/target_file
 	-rm -rf  ../tools/combine_bin.pyc
 	@echo "build QIO"
-	python ../tools/makecombine.py ../bin/boot_v1.7.bin    ../bin/upgrade/$(APP_BIN_NAME)\(1\)_$(USER_SW_VER).bin  ../bin/esp_init_data_default.bin  ../bin/blank.bin   ../bin/upgrade/$(APP_BIN_NAME)_target$(crystal_bin_suffix)_QIO_TLS_$(USER_SW_VER).bin 0 $(speed_index) $(size_map) $(crystalfreq) $(disable_cfg)
+	python ../tools/makecombine.py ../bin/boot_v1.7.bin    ../bin/upgrade/$(APP_BIN_NAME)\(1\)_$(USER_SW_VER).bin  ../bin/esp_init_data_default.bin  ../bin/blank.bin   ../bin/upgrade/$(APP_BIN_NAME)$(flash_bin_suffix)_QIO_TLS_$(USER_SW_VER).bin 0 $(speed_index) $(size_map) $(crystalfreq) $(disable_cfg)
 	@echo "build DOUT"
-	python ../tools/makecombine.py ../bin/boot_v1.7.bin    ../bin/upgrade/$(APP_BIN_NAME)\(1\)_$(USER_SW_VER).bin  ../bin/esp_init_data_default.bin  ../bin/blank.bin   ../bin/upgrade/$(APP_BIN_NAME)_target$(crystal_bin_suffix)_DOUT_TLS_$(USER_SW_VER).bin 3 $(speed_index) $(size_map) $(crystalfreq) $(disable_cfg)
+	python ../tools/makecombine.py ../bin/boot_v1.7.bin    ../bin/upgrade/$(APP_BIN_NAME)\(1\)_$(USER_SW_VER).bin  ../bin/esp_init_data_default.bin  ../bin/blank.bin   ../bin/upgrade/$(APP_BIN_NAME)$(flash_bin_suffix)_DOUT_TLS_$(USER_SW_VER).bin 3 $(speed_index) $(size_map) $(crystalfreq) $(disable_cfg)
 
 
 	mkdir -p ../bin/upgrade/$(APP_BIN_NAME)/$(USER_SW_VER)
-	mv -f  ../bin/upgrade/$(APP_BIN_NAME)\(1\)_$(USER_SW_VER).bin  ../bin/upgrade/$(APP_BIN_NAME)/$(USER_SW_VER)/$(APP_BIN_NAME)_TLS_$(USER_SW_VER).bin
-	mv -f  ../bin/upgrade/$(APP_BIN_NAME)_ug_$(USER_SW_VER).bin  ../bin/upgrade/$(APP_BIN_NAME)/$(USER_SW_VER)/$(APP_BIN_NAME)_ug_TLS_$(USER_SW_VER).bin	
-	mv -f  ../bin/upgrade/$(APP_BIN_NAME)_target$(crystal_bin_suffix)_QIO_TLS_$(USER_SW_VER).bin  ../bin/upgrade/$(APP_BIN_NAME)/$(USER_SW_VER)/
-	mv -f  ../bin/upgrade/$(APP_BIN_NAME)_target$(crystal_bin_suffix)_DOUT_TLS_$(USER_SW_VER).bin  ../bin/upgrade/$(APP_BIN_NAME)/$(USER_SW_VER)/
+	mv -f  ../bin/upgrade/$(APP_BIN_NAME)\(1\)_$(USER_SW_VER).bin  ../bin/upgrade/$(APP_BIN_NAME)/$(USER_SW_VER)/$(APP_BIN_NAME)$(flash_bin_suffix)_UA_TLS_$(USER_SW_VER).bin
+	mv -f  ../bin/upgrade/$(APP_BIN_NAME)_ug_$(USER_SW_VER).bin  ../bin/upgrade/$(APP_BIN_NAME)/$(USER_SW_VER)/$(APP_BIN_NAME)$(flash_bin_suffix)_UG_TLS_$(USER_SW_VER).bin	
+	mv -f  ../bin/upgrade/$(APP_BIN_NAME)$(flash_bin_suffix)_QIO_TLS_$(USER_SW_VER).bin  ../bin/upgrade/$(APP_BIN_NAME)/$(USER_SW_VER)/
+	mv -f  ../bin/upgrade/$(APP_BIN_NAME)$(flash_bin_suffix)_DOUT_TLS_$(USER_SW_VER).bin  ../bin/upgrade/$(APP_BIN_NAME)/$(USER_SW_VER)/
 
+	@echo "target file"
+	mkdir -p $(CI_PACKAGE_PATH)
+	cp -f  ../bin/upgrade/$(APP_BIN_NAME)/$(USER_SW_VER)/* $(CI_PACKAGE_PATH)
 
 
 endif
@@ -453,8 +473,14 @@ $(foreach image,$(GEN_IMAGES),$(eval $(call MakeImage,$(basename $(image)))))
 # Required for each makefile to inherit from the parent
 #
 
-INCLUDES := $(INCLUDES) -I $(PDIR)include -I $(PDIR)extra_include
-INCLUDES += -I $(PDIR)include/lwip -I $(PDIR)include/lwip/ipv4 -I $(PDIR)include/lwip/ipv6
-INCLUDES += -I $(PDIR)include/espressif
+INCLUDES := $(INCLUDES) 
+INCLUDES += -I $(PDIR)sdk/esp8266/fac_include/lwip
+INCLUDES += -I $(PDIR)sdk/esp8266/fac_include/lwip/ipv4
+INCLUDES += -I $(PDIR)sdk/esp8266/fac_include/lwip/ipv6
+INCLUDES += -I $(PDIR)sdk/esp8266/fac_include/espressif
+INCLUDES += -I $(PDIR)sdk/esp8266/fac_include
+INCLUDES += -I $(PDIR)sdk/esp8266/tuya_include/include/
+INCLUDES += -I $(PDIR)sdk/esp8266/tuya_include
+
 PDIR := ../$(PDIR)
 sinclude $(PDIR)Makefile

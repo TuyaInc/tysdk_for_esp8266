@@ -1,0 +1,1 @@
+sinclude $(TOP_DIR)/platforms/$(TARGET_PLATFORM)/build/build_sh/make_rule

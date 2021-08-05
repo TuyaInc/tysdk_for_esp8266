@@ -437,6 +437,8 @@ OPERATE_RET httpc_dev_token_create(VOID);
 OPERATE_RET httpc_report_device_sn(CHAR *p_mcu_sn);
 
 
+OPERATE_RET http_iot_dns_get_host_ip(IN CONST CHAR_T *domain, IN CHAR *ip,IN UINT ip_max_len);
+
 
 #ifdef __cplusplus
 }

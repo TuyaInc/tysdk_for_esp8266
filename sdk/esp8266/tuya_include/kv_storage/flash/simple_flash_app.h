@@ -40,6 +40,17 @@ OPERATE_RET simple_flash_app_init(IN CONST BYTE_T *p_encrypt_key, IN CONST UINT_
 
 
 /***********************************************************
+*  Function: simple_flash_app_factory_init - only use in mf_init
+*  Input: none
+*  Output: 
+*  Return: none
+***********************************************************/
+__SIMPLE_FLASH_APP_EXT \
+OPERATE_RET simple_flash_app_factory_init(IN CONST BYTE_T *p_encrypt_key, IN CONST UINT_T encrypt_key_len);
+
+
+
+/***********************************************************
 *  Function: simple_flash_app_uninit
 *  Input: none
 *  Output: 

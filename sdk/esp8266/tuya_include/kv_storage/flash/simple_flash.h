@@ -178,7 +178,7 @@ void sf_init_hooks(sf_hook_s *hooks);
 *        data validity internally" 
 ***********************************************************/
 __SIMPLE_FLASH_EXT \
-sf_ret create_flash_hand_and_init(sf_hand_s **ohand,const sf_flash_cfg_s *cfg);
+sf_ret create_flash_hand_and_init(sf_hand_s **ohand,const sf_flash_cfg_s *cfg, const sf_uint8_t flag);
 
 /***********************************************************
 *  Function: delete_flash_hand
@@ -257,6 +257,10 @@ sf_ret sf_format(sf_hand_s *hand);
 ***********************************************************/
 __SIMPLE_FLASH_EXT \
 sf_ret sf_delete(sf_hand_s *hand,const sf_char_t *name);
+
+__SIMPLE_FLASH_EXT \
+sf_ret sf_flash_encrypt_key(sf_flash_cfg_s *cfg);
+
 
 /***********************************************************
 *  Function: sf_fuzzy_delete

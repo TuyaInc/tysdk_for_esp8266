@@ -24,7 +24,7 @@ extern "C" {
 
 #if DEBUG
 #define PR_DEBUG(_fmt_, ...) \
-        os_printf("[D]%s:%d "_fmt_"\n", __FILE__,__LINE__,##__VA_ARGS__)
+        os_printf("D:%s:%d"_fmt_"\n", __FILE__,__LINE__,##__VA_ARGS__)
 #define PR_DEBUG_RAW(_fmt_, ...) \
         os_printf(_fmt_,##__VA_ARGS__)
 #else
@@ -33,9 +33,10 @@ extern "C" {
 #endif
 
 #define PR_NOTICE(_fmt_, ...) \
-        os_printf("[N]%s:%d "_fmt_"\n", __FILE__,__LINE__,##__VA_ARGS__)
+        os_printf("N:%s:%d"_fmt_"\n", __FILE__,__LINE__,##__VA_ARGS__)
 #define PR_ERR(_fmt_, ...) \
-        os_printf("[ERR]%s:%d "_fmt_"\n", __FILE__,__LINE__,##__VA_ARGS__)
+        os_printf("E:%s:%d"_fmt_"\n", __FILE__,__LINE__,##__VA_ARGS__)
+
 
 
 #define PrintLogRaw os_printf

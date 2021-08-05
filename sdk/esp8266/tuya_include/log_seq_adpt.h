@@ -121,6 +121,8 @@ typedef BYTE MQTT_RP_TYPE;
 #define MQTT_RP_TYPE_PING_SEND				17
 #define MQTT_RP_TYPE_PING_TIMEOUT			18
 #define MQTT_RP_TYPE_PING_RECONN			19
+#define MQTT_RP_TYPE_ROUTER_CONNECT			80
+#define MQTT_RP_TYPE_DNS_IP			        81
 
 
 typedef INT  MQTT_RP_CODE;
@@ -170,15 +172,6 @@ __LOG_SEQ_ADAPT_EXT \
 OPERATE_RET insert_ap_cfg_err_log(APP_CFG_RP_CODE ap_cfg_type);
 
 /***********************************************************
-*  Function: insert_router_err_log
-*  Desc:	 insert a "log sequence" write to flash
-*  Input:	 router_err_type
-*  Return:	 OPRT_OK: success  Other: fail
-***********************************************************/
-__LOG_SEQ_ADAPT_EXT \
-OPERATE_RET insert_router_err_log(APP_CFG_RP_CODE router_err_type);
-
-/***********************************************************
 *  Function: set_mqtt_seq_log
 *  Desc:	 insert a "log sequence" not write to flash
 *  Input:	 mqtt_type
@@ -202,6 +195,15 @@ OPERATE_RET set_http_err_log(HTTP_RP_TYPE http_type,INT err_code);
 ***********************************************************/
 __LOG_SEQ_ADAPT_EXT \
 OPERATE_RET set_mqtt_err_log(MQTT_RP_TYPE mqtt_type,INT err_code);
+/***********************************************************
+*  Function: set_router_err_log
+*  Desc:	 insert a "log sequence"  write to flash
+*  Input:	 mqtt_type  err_code
+*  Return:	 OPRT_OK: success  Other: fail
+***********************************************************/
+__LOG_SEQ_ADAPT_EXT \
+OPERATE_RET set_router_err_log(VOID);
+
 /***********************************************************
 *  Function: get_cfg_report_log
 *  Desc:	 get cfg log flag
@@ -264,6 +266,23 @@ BOOL get_log_seq_write_st(VOID);
 __LOG_SEQ_ADAPT_EXT \
 VOID set_log_seq_write_st(BOOL st);
 
+/***********************************************************
+*  Function: tuya_user_write_log_seq
+*  Desc:	 tuya_user_write_log_seq
+*  note:     log_data len must < 1K
+*  Return:	 
+***********************************************************/
+__LOG_SEQ_ADAPT_EXT \
+OPERATE_RET tuya_user_write_log_seq(IN CONST CHAR * log_data);
+
+/***********************************************************
+*  Function: set_reset_log
+*  Desc:	 set_reset_log
+*  Return:	 
+***********************************************************/
+__LOG_SEQ_ADAPT_EXT \
+OPERATE_RET set_reset_log(INT type,INT code);
+
 
 #else
 /***********************************************************
@@ -325,7 +344,7 @@ VOID set_log_rp_file_rst(VOID);
 *  Return:	 OPRT_OK: success  Other: fail
 ***********************************************************/
 __LOG_SEQ_ADAPT_EXT \
-OPERATE_RET set_http_err_log(CHAR*api_name,OPERATE_RET op_ret);
+OPERATE_RET set_http_err_log(HTTP_RP_TYPE http_type,INT err_code);
 
 /***********************************************************
 *  Function: log_seq_upload_realtime_log
@@ -335,6 +354,61 @@ OPERATE_RET set_http_err_log(CHAR*api_name,OPERATE_RET op_ret);
 ***********************************************************/
 __LOG_SEQ_ADAPT_EXT \
 OPERATE_RET log_seq_upload_realtime_log(VOID);
+
+/***********************************************************
+*  Function: set_mqtt_seq_log
+*  Desc:	 insert a "log sequence" not write to flash
+*  Input:	 mqtt_type
+*  Return:	 OPRT_OK: success  Other: fail
+***********************************************************/
+__LOG_SEQ_ADAPT_EXT \
+OPERATE_RET set_mqtt_seq_log(MQTT_RP_TYPE mqtt_type);
+
+/***********************************************************
+*  Function: set_mqtt_err_log
+*  Desc:	 insert a "log sequence"  write to flash
+*  Input:	 mqtt_type  err_code
+*  Return:	 OPRT_OK: success  Other: fail
+***********************************************************/
+__LOG_SEQ_ADAPT_EXT \
+OPERATE_RET set_mqtt_err_log(MQTT_RP_TYPE mqtt_type,INT err_code);
+
+/***********************************************************
+*  Function: log_seq_init
+*  Desc:	 log_seq_init
+*  Return:	 OPRT_OK: success  Other: fail
+***********************************************************/
+__LOG_SEQ_ADAPT_EXT \
+OPERATE_RET log_seq_init(VOID);
+
+
+/***********************************************************
+*  Function: tuya_user_write_log_seq
+*  Desc:	 tuya_user_write_log_seq
+*  note:     log_data len must < 1K
+*  Return:	 
+***********************************************************/
+__LOG_SEQ_ADAPT_EXT \
+OPERATE_RET tuya_user_write_log_seq(IN CONST CHAR * log_data);
+
+/***********************************************************
+*  Function: set_router_err_log
+*  Desc:	 set_router_err_log
+*  Return:	 
+***********************************************************/
+__LOG_SEQ_ADAPT_EXT \
+OPERATE_RET set_router_err_log(VOID);
+
+/***********************************************************
+*  Function: set_reset_log
+*  Desc:	 set_reset_log
+*  Return:	 
+***********************************************************/
+__LOG_SEQ_ADAPT_EXT \
+OPERATE_RET set_reset_log(INT type,INT code);
+
+__LOG_SEQ_ADAPT_EXT \
+OPERATE_RET set_mqtt_str_log(MQTT_RP_TYPE mqtt_type,CHAR* log);
 
 #endif
 

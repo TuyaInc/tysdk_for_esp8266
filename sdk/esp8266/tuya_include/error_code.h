@@ -149,6 +149,7 @@
 #define OPRT_HTTP_NO_ENCRPT                       (125)
 #define OPRT_HTTP_GW_RESET                        (126)
 #define OPRT_HTTP_GW_FAC_RESET                    (127)
+#define OPRT_FLASH_NOT_ENOUGH_PAGE				  (128)
 
 
 

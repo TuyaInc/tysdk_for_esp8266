@@ -117,6 +117,9 @@ OPERATE_RET uni_system_set_lowpower_mode(VOID);
 _UNI_SYSTEM_EXT \
 BOOL uni_system_is_lowpower_mode(VOID);
 
+_UNI_SYSTEM_EXT \
+INT_T tuya_hal_get_random_data(INT_T range);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

@@ -49,6 +49,15 @@ __FLASH_API_EXT \
 OPERATE_RET flash_api_init(VOID);
 
 /***********************************************************
+*  Function: mf_kv_init
+*  Input: none
+*  Output: none 
+*  Return: OPERATE_RET
+***********************************************************/
+__FLASH_API_EXT \
+OPERATE_RET mf_kv_init(VOID);
+
+/***********************************************************
 *  Function: msf_register_module
 *  Input: none
 *  Output: none 

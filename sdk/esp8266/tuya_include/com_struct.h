@@ -389,9 +389,9 @@ typedef struct {
 *************************variable define********************
 ***********************************************************/
 #if (ESP8266_1M == 1)
-#define BS_VER "6.02"
+#define BS_VER "6.03"
 #else
-#define BS_VER "22.10"
+#define BS_VER "22.11"
 #endif
 #define PT_VER "2.2"
 #define LAN_PRO_VER "3.3"
